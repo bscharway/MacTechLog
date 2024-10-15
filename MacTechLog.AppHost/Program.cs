@@ -9,4 +9,8 @@ builder.AddProject<Projects.MacTechLog_Web>("webfrontend")
     .WithReference(cache)
     .WithReference(apiService);
 
+builder.AddProject<Projects.PilotEntryService>("pilotentryservice");
+
+builder.AddProject<Projects.MaintenanceLogsService>("maintenancelogsservice");
+
 builder.Build().Run();

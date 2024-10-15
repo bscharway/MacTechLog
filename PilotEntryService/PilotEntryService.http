@@ -1,0 +1,6 @@
+@PilotEntryService_HostAddress = http://localhost:5127
+
+GET {{PilotEntryService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

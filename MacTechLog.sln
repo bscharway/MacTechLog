@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacTechLog.AppHost", "MacTechLog.AppHost\MacTechLog.AppHost.csproj", "{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.AppHost", "MacTechLog.AppHost\MacTechLog.AppHost.csproj", "{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.ServiceDefaults", "MacTechLog.ServiceDefaults\MacTechLog.ServiceDefaults.csproj", "{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}"
 EndProject
@@ -11,6 +11,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.Web", "MacTechLog.Web\MacTechLog.Web.csproj", "{FB52FC79-17D2-476F-AA85-2C7592EA044D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.Tests", "MacTechLog.Tests\MacTechLog.Tests.csproj", "{E52956A7-BBA5-4740-B80E-8C66610F3FC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{3C972450-2428-4928-9119-762544173F78}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{6B7FBF56-1720-47F7-B8A1-043D244F125F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E35B7C2E-F932-4FF9-B82F-9D5CBF209259}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspireOrc", "AspireOrc", "{0A3C4149-7636-4881-9621-3330FFEEB980}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PilotEntryService", "PilotEntryService\PilotEntryService.csproj", "{55837D1B-F961-4910-BED6-1ADA883685C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaintenanceLogsService", "MaintenanceLogsService\MaintenanceLogsService.csproj", "{D1293AB6-450C-4165-965B-404698E0A40A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +50,26 @@ Global
 		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55837D1B-F961-4910-BED6-1ADA883685C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55837D1B-F961-4910-BED6-1ADA883685C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55837D1B-F961-4910-BED6-1ADA883685C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55837D1B-F961-4910-BED6-1ADA883685C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1293AB6-450C-4165-965B-404698E0A40A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1293AB6-450C-4165-965B-404698E0A40A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1293AB6-450C-4165-965B-404698E0A40A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1293AB6-450C-4165-965B-404698E0A40A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2} = {0A3C4149-7636-4881-9621-3330FFEEB980}
+		{40DBF1AF-0BA9-4515-B186-2D18FEE0C808} = {0A3C4149-7636-4881-9621-3330FFEEB980}
+		{178B2707-A180-4031-9C6C-F8589E21937A} = {3C972450-2428-4928-9119-762544173F78}
+		{FB52FC79-17D2-476F-AA85-2C7592EA044D} = {6B7FBF56-1720-47F7-B8A1-043D244F125F}
+		{E52956A7-BBA5-4740-B80E-8C66610F3FC5} = {E35B7C2E-F932-4FF9-B82F-9D5CBF209259}
+		{55837D1B-F961-4910-BED6-1ADA883685C8} = {3C972450-2428-4928-9119-762544173F78}
+		{D1293AB6-450C-4165-965B-404698E0A40A} = {3C972450-2428-4928-9119-762544173F78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {60CA23BB-57E5-45C5-8FB9-61DD5656BF73}

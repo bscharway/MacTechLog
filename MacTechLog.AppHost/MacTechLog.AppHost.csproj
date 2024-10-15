@@ -12,6 +12,8 @@
   <ItemGroup>
     <ProjectReference Include="..\MacTechLog.ApiService\MacTechLog.ApiService.csproj" />
     <ProjectReference Include="..\MacTechLog.Web\MacTechLog.Web.csproj" />
+    <ProjectReference Include="..\MaintenanceLogsService\MaintenanceLogsService.csproj" />
+    <ProjectReference Include="..\PilotEntryService\PilotEntryService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
