@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacTechLog.AppHost", "MacTechLog.AppHost\MacTechLog.AppHost.csproj", "{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.ServiceDefaults", "MacTechLog.ServiceDefaults\MacTechLog.ServiceDefaults.csproj", "{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.ApiService", "MacTechLog.ApiService\MacTechLog.ApiService.csproj", "{178B2707-A180-4031-9C6C-F8589E21937A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.Web", "MacTechLog.Web\MacTechLog.Web.csproj", "{FB52FC79-17D2-476F-AA85-2C7592EA044D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacTechLog.Tests", "MacTechLog.Tests\MacTechLog.Tests.csproj", "{E52956A7-BBA5-4740-B80E-8C66610F3FC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F494FEE8-1AE5-4EF2-8F45-4ED2A2DC5DC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40DBF1AF-0BA9-4515-B186-2D18FEE0C808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178B2707-A180-4031-9C6C-F8589E21937A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178B2707-A180-4031-9C6C-F8589E21937A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178B2707-A180-4031-9C6C-F8589E21937A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178B2707-A180-4031-9C6C-F8589E21937A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB52FC79-17D2-476F-AA85-2C7592EA044D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB52FC79-17D2-476F-AA85-2C7592EA044D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB52FC79-17D2-476F-AA85-2C7592EA044D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB52FC79-17D2-476F-AA85-2C7592EA044D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E52956A7-BBA5-4740-B80E-8C66610F3FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60CA23BB-57E5-45C5-8FB9-61DD5656BF73}
+	EndGlobalSection
+EndGlobal
