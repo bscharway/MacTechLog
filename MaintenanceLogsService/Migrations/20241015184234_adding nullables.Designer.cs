@@ -4,6 +4,7 @@ using MaintenanceLogsService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MaintenanceLogsService.Migrations
 {
     [DbContext(typeof(MaintenanceLogsContext))]
-    partial class MaintenanceLogsContextModelSnapshot : ModelSnapshot
+    [Migration("20241015184234_adding nullables")]
+    partial class addingnullables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,42 +90,6 @@ namespace MaintenanceLogsService.Migrations
                     b.HasIndex("OilHydraulicFluidDataId");
 
                     b.ToTable("MaintenanceLogs");
-                });
-
-            modelBuilder.Entity("MaintenanceLogsService.Models.Entities.MaintenanceTicket", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AircraftRegistration")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("MaintenanceLogId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ResolvedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaintenanceLogId");
-
-                    b.ToTable("MaintenanceTickets");
                 });
 
             modelBuilder.Entity("MaintenanceLogsService.Models.Entities.OilHydraulicFluidData", b =>
@@ -204,15 +171,6 @@ namespace MaintenanceLogsService.Migrations
                         .HasForeignKey("OilHydraulicFluidDataId");
 
                     b.Navigation("OilHydraulicFluidData");
-                });
-
-            modelBuilder.Entity("MaintenanceLogsService.Models.Entities.MaintenanceTicket", b =>
-                {
-                    b.HasOne("MaintenanceLogsService.Models.Entities.MaintenanceLog", "MaintenanceLog")
-                        .WithMany()
-                        .HasForeignKey("MaintenanceLogId");
-
-                    b.Navigation("MaintenanceLog");
                 });
 
             modelBuilder.Entity("MaintenanceLogsService.Models.Entities.PartReplacement", b =>

@@ -14,5 +14,6 @@ namespace MaintenanceLogsService.Data
         public DbSet<MaintenanceLog> MaintenanceLogs { get; set; }
         public DbSet<DefectReport> DefectReports { get; set; }
         public DbSet<PartReplacement> PartReplacements { get; set; }
+        public DbSet<MaintenanceTicket> MaintenanceTickets { get; set; }
     }
 }

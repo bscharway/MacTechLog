@@ -13,5 +13,6 @@
         public CreateOilHydraulicFluidDataDto OilHydraulicFluidData { get; set; }
         public ICollection<CreateDefectReportDto> DefectReports { get; set; }
         public ICollection<CreatePartReplacementDto> PartReplacements { get; set; }
+        public int? MaintenanceTicketId { get; set; } // Link to MaintenanceTicket
     }
 }

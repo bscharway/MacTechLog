@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MaintenanceLogsService.Controllers
 {
-    // API Controller
+    // Maintenance Log Controller
     [ApiController]
     [Route("api/[controller]")]
     public class MaintenanceLogController : ControllerBase
@@ -20,25 +20,25 @@ namespace MaintenanceLogsService.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("logs")]
         public async Task<IActionResult> GetAllMaintenanceLogs()
         {
-            var maintenanceLogs = await _service.GetAllMaintenanceLogsAsync();
-            return Ok(maintenanceLogs);
+            var logs = await _service.GetAllMaintenanceLogsAsync();
+            return Ok(logs);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("logs/{id}")]
         public async Task<IActionResult> GetMaintenanceLogById(int id)
         {
-            var maintenanceLog = await _service.GetMaintenanceLogByIdAsync(id);
-            if (maintenanceLog == null)
+            var log = await _service.GetMaintenanceLogByIdAsync(id);
+            if (log == null)
             {
                 return NotFound();
             }
-            return Ok(maintenanceLog);
+            return Ok(log);
         }
 
-        [HttpPost]
+        [HttpPost("logs")]
         public async Task<IActionResult> AddMaintenanceLog([FromBody] CreateMaintenanceLogDto maintenanceLogDto)
         {
             if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace MaintenanceLogsService.Controllers
             return CreatedAtAction(nameof(GetMaintenanceLogById), new { id = maintenanceLogDto.AircraftRegistration }, maintenanceLogDto);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("logs/{id}")]
         public async Task<IActionResult> UpdateMaintenanceLog(int id, [FromBody] CreateMaintenanceLogDto maintenanceLogDto)
         {
             if (!ModelState.IsValid)
@@ -67,16 +67,50 @@ namespace MaintenanceLogsService.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("logs/{id}")]
         public async Task<IActionResult> DeleteMaintenanceLog(int id)
         {
-            var maintenanceLog = await _service.GetMaintenanceLogByIdAsync(id);
-            if (maintenanceLog == null)
+            try
+            {
+                await _service.DeleteMaintenanceLogAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-            await _service.DeleteMaintenanceLogAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("tickets")]
+        public async Task<IActionResult> AddMaintenanceTicket([FromBody] CreateMaintenanceTicketDto ticketDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _service.AddMaintenanceTicketAsync(ticketDto);
+            return Ok();
+        }
+
+        [HttpPut("tickets/{id}/status")]
+        public async Task<IActionResult> UpdateMaintenanceTicketStatus(int id, [FromBody] string status)
+        {
+            try
+            {
+                await _service.UpdateMaintenanceTicketStatusAsync(id, status);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpGet("tickets")]
+        public async Task<IActionResult> GetAllTickets()
+        {
+            var tickets = await _service.GetAllTicketsAsync();
+            return Ok(tickets);
         }
     }
 }
