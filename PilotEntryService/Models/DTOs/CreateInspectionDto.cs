@@ -1,6 +1,8 @@
 ﻿namespace PilotEntryService.Models.DTOs
 {
-    // DTO for creating Inspection (without Id)
+    /// <summary>
+    /// DTO for creating Inspection (without Id) for the current flight 
+    /// </summary>
     public class CreateInspectionDto
     {
         public bool PreFlightInspectionCompleted { get; set; }

@@ -1,5 +1,8 @@
 ﻿namespace PilotEntryService.Models.DTOs
 {
+    /// <summary>
+    /// DTO for a full trip log.
+    /// </summary>
     public class FullTripLogDto
     {
         public int Id { get; set; }

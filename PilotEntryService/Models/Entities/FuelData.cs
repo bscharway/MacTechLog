@@ -2,6 +2,9 @@
 
 namespace PilotEntryService.Models.Entities
 {
+    /// <summary>
+    /// Gets or sets the unique identifier for fuel data.
+    /// </summary>
     public class FuelData
     {
         public int Id { get; set; }

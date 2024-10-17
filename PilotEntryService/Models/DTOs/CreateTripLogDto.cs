@@ -1,10 +1,18 @@
-﻿namespace PilotEntryService.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PilotEntryService.Models.DTOs
 {
-    // DTO for creating TripLog (without Id)
+
+    /// <summary>
+    /// DTO for creating a new trip log (without Id).
+    /// </summary>
     public class CreateTripLogDto
     {
+        [Required]
         public string FlightNumber { get; set; }
+        [Required]
         public string AircraftRegistration { get; set; }
+        [Required]
         public string PilotId { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
@@ -13,7 +21,7 @@
         public string Remarks { get; set; }
 
         // Embedded additional data
-        public CreateDe_Anti_IcingDataDto DeAntiIcingData { get; set; }
+        public CreateDe_Anti_IcingDataDto? DeAntiIcingData { get; set; }
         public CreateFuelDataDto FuelData { get; set; }
         public CreateInspectionDto Inspection { get; set; }
     }

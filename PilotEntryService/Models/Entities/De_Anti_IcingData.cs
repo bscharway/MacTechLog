@@ -2,6 +2,9 @@
 
 namespace PilotEntryService.Models.Entities
 {
+    /// <summary>
+    /// Represents de-anti icing data for a flight.
+    /// </summary>
     public class De_Anti_IcingData
     {
         public int Id { get; set; }

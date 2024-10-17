@@ -2,20 +2,24 @@
 
 namespace PilotEntryService.Models.Entities
 {
-    // Entity Model for TripLog
+    /// <summary>
+    /// Represents a trip log entity containing flight details.
+    /// </summary>
     public class TripLog
     {
         public int Id { get; set; }
         [MaxLength(10)]
-        public string FlightNumber { get; set; }  // Added Flight Number
-        public string AircraftRegistration { get; set; }  // Changed from AircraftId to AircraftRegistration
+        [Required]
+        public string FlightNumber { get; set; }
+        [Required]
+        public string AircraftRegistration { get; set; }  
         public string PilotId { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         [MaxLength(4)]
-        public string? DepartureAirport { get; set; }  // Added max length for Departure Airport
+        public string? DepartureAirport { get; set; }  
         [MaxLength(4)]
-        public string DestinationAirport { get; set; }  // Added max length for Destination Airport
+        public string DestinationAirport { get; set; }  
         public string? Remarks { get; set; }
 
         // Foreign keys and navigation properties

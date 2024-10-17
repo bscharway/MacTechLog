@@ -1,5 +1,8 @@
 ﻿namespace PilotEntryService.Models.DTOs
 {
+    /// <summary>
+    /// DTO for providing fuel information for the current trip
+    /// </summary>
     public class FuelDataDto
     {
         public int Id { get; set; }

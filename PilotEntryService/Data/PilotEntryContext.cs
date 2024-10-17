@@ -4,9 +4,15 @@ using System.Collections.Generic;
 
 namespace PilotEntryService.Data
 {
-    // Entity Framework Context
+    /// <summary>
+    /// Entity Framework Context for the Pilot Entry Service.
+    /// </summary>
     public class PilotEntryContext : DbContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PilotEntryContext"/> class.
+        /// </summary>
+        /// <param name="options">The options to configure the context.</param>
         public PilotEntryContext(DbContextOptions<PilotEntryContext> options) : base(options)
         {
         }
@@ -16,11 +22,15 @@ namespace PilotEntryService.Data
         public DbSet<FuelData> FuelData { get; set; }
         public DbSet<Inspection> Inspections { get; set; }
 
+        /// <summary>
+        /// Configures the model and seeds initial data.
+        /// </summary>
+        /// <param name="modelBuilder">The builder used to construct the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seed data
+            // Seed data for DeAntiIcingData
             modelBuilder.Entity<De_Anti_IcingData>().HasData(
                 new De_Anti_IcingData
                 {
@@ -29,7 +39,7 @@ namespace PilotEntryService.Data
                     MixtureRatio = "50/50",
                     Time = TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(-4))
                 },
-               new De_Anti_IcingData
+                new De_Anti_IcingData
                 {
                     Id = 2,
                     FluidType = (int)FluideType.Type2,
@@ -38,6 +48,7 @@ namespace PilotEntryService.Data
                 }
             );
 
+            // Seed data for FuelData
             modelBuilder.Entity<FuelData>().HasData(
                 new FuelData
                 {
@@ -61,6 +72,7 @@ namespace PilotEntryService.Data
                 }
             );
 
+            // Seed data for Inspection
             modelBuilder.Entity<Inspection>().HasData(
                 new Inspection
                 {
@@ -76,6 +88,7 @@ namespace PilotEntryService.Data
                 }
             );
 
+            // Seed data for TripLog
             modelBuilder.Entity<TripLog>().HasData(
                 new TripLog
                 {
@@ -92,7 +105,6 @@ namespace PilotEntryService.Data
                     FuelDataId = 1,
                     InspectionId = 1
                 },
-
                 new TripLog
                 {
                     Id = 2,
@@ -103,11 +115,10 @@ namespace PilotEntryService.Data
                     ArrivalTime = DateTime.UtcNow.AddHours(-5),
                     DepartureAirport = "BLL",
                     DestinationAirport = "NVI",
-                    Remarks = "kinda bumpy",
+                    Remarks = "Kinda bumpy",
                     DeAntiIcingDataId = 2,
-                    FuelDataId = 2, 
+                    FuelDataId = 2,
                     InspectionId = 2
-                      
                 }
             );
         }

@@ -1,5 +1,8 @@
 ﻿namespace PilotEntryService.Models.DTOs
 {
+    /// <summary>
+    /// DTO for providing inspection Status
+    /// </summary>
     public class InspectionDto
     {
         public int Id { get; set; }
