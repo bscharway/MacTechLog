@@ -7,7 +7,7 @@ namespace PilotEntryService.Services.Interfaces
     {
         Task<IEnumerable<FullTripLogDto>> GetAllTripLogsAsync();
         Task<FullTripLogDto> GetTripLogByIdAsync(int id);
-        Task AddTripLogAsync(CreateTripLogDto tripLogDto);
+        Task CreateTripLogAsync(CreateTripLogDto tripLogDto);
         Task UpdateTripLogAsync(int id, CreateTripLogDto tripLogDto);
         Task DeleteTripLogAsync(int id);
     }

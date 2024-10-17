@@ -14,17 +14,14 @@ namespace MaintenanceLogsService.MessageBroker
 {
     public class TripLogConsumerService : BackgroundService
     {
-        private readonly IMaintenanceLogService _maintenanceLogService;
-        private readonly IMapper _mapper;
+        private readonly IServiceProvider _serviceProvider;
         private IConnection _connection;
-        RabbitMQ.Client.IModel _channel;
+        private IModel _channel;
 
-        public TripLogConsumerService(IMaintenanceLogService maintenanceLogService, IMapper mapper)
+        public TripLogConsumerService(IServiceProvider serviceProvider)
         {
-            _maintenanceLogService = maintenanceLogService;
-            _mapper = mapper;
+            _serviceProvider = serviceProvider;
 
-            // Set up RabbitMQ connection and channel
             var factory = new ConnectionFactory() { HostName = "localhost" };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
@@ -36,20 +33,24 @@ namespace MaintenanceLogsService.MessageBroker
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += async (model, ea) =>
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var tripLogMessage = JsonSerializer.Deserialize<TripLogMessage>(message);
-
-                if (tripLogMessage != null && !string.IsNullOrEmpty(tripLogMessage.Remark))
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    var createTicketDto = new CreateMaintenanceTicketDto
-                    {
-                        AircraftRegistration = tripLogMessage.AircraftRegistration,
-                        Description = $"Ticket triggered by Trip Log: {tripLogMessage.Remark}",
-                        TripLogId = tripLogMessage.TripLogId
-                    };
+                    var maintenanceLogService = scope.ServiceProvider.GetRequiredService<IMaintenanceLogService>();
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var tripLogMessage = JsonSerializer.Deserialize<TripLogMessage>(message);
 
-                    await _maintenanceLogService.AddMaintenanceTicketAsync(createTicketDto);
+                    if (tripLogMessage != null && !string.IsNullOrEmpty(tripLogMessage.Remark))
+                    {
+                        var createTicketDto = new CreateMaintenanceTicketDto
+                        {
+                            AircraftRegistration = tripLogMessage.AircraftRegistration,
+                            Description = $"Ticket triggered by Trip Log: {tripLogMessage.Remark}",
+                            TripLogId = tripLogMessage.TripLogId
+                        };
+
+                        await maintenanceLogService.AddMaintenanceTicketAsync(createTicketDto);
+                    }
                 }
             };
 

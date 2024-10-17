@@ -39,13 +39,13 @@ namespace PilotEntryService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTripLog([FromBody] CreateTripLogDto tripLogDto)
+        public async Task<IActionResult> CreateTripLog([FromBody] CreateTripLogDto tripLogDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            await _service.AddTripLogAsync(tripLogDto);
+            await _service.CreateTripLogAsync(tripLogDto);
             return CreatedAtAction(nameof(GetTripLogById), new { id = tripLogDto.FlightNumber }, tripLogDto);
         }
 

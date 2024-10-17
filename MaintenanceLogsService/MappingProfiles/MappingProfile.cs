@@ -1,24 +1,37 @@
 ﻿using AutoMapper;
 using MaintenanceLogsService.Models.DTOs;
 using MaintenanceLogsService.Models.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MaintenanceLogsService.MappingProfiles
 {
     // AutoMapper Mapping Profile
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public class MaintenanceLogsMappingProfile : Profile
         {
-            CreateMap<MaintenanceLog, MaintenanceLogDto>();
-            CreateMap<CreateMaintenanceLogDto, MaintenanceLog>();
-            CreateMap<DefectReport, DefectReportDto>();
-            CreateMap<CreateDefectReportDto, DefectReport>();
-            CreateMap<PartReplacement, PartReplacementDto>();
-            CreateMap<CreatePartReplacementDto, PartReplacement>();
-            CreateMap<OilHydraulicFluidData, OilHydraulicFluidDataDto>();
-            CreateMap<CreateOilHydraulicFluidDataDto, OilHydraulicFluidData>();
-        }
-    }
+            public MaintenanceLogsMappingProfile()
+            {
+                // Mapping for MaintenanceTicket
+                CreateMap<CreateMaintenanceTicketDto, MaintenanceTicket>();
+                CreateMap<MaintenanceTicket, MaintenanceTicketDto>();
 
+                // Mapping for MaintenanceLog
+                CreateMap<CreateMaintenanceLogDto, MaintenanceLog>();
+                CreateMap<MaintenanceLog, MaintenanceLogDto>();
+
+                // Mapping for OilHydraulicFluidData
+                CreateMap<CreateOilHydraulicFluidDataDto, OilHydraulicFluidData>();
+                CreateMap<OilHydraulicFluidData, OilHydraulicFluidDataDto>();
+
+                // Mapping for DefectReport
+                CreateMap<CreateDefectReportDto, DefectReport>();
+                CreateMap<DefectReport, DefectReportDto>();
+
+                // Mapping for PartReplacement
+                CreateMap<CreatePartReplacementDto, PartReplacement>();
+                CreateMap<PartReplacement, PartReplacementDto>();
+            }
+        }
+
+    }
 }

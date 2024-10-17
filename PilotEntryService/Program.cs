@@ -6,6 +6,8 @@ using PilotEntryService.Services.Interfaces;
 using PilotEntryService.Services;
 using Microsoft.EntityFrameworkCore;
 using PilotEntryService.MappingProfiles;
+using PilotEntryService.MessageBroker;
+using Microsoft.OpenApi.Models;
 //using PilotEntryService.Data.SeedData;
 
 
@@ -22,14 +24,19 @@ public class Program
             builder.Configuration["ConnectionStrings:LocalDev"]));
 
         builder.Services.AddScoped<ITripLogRepository, TripLogRepository>();
-        builder.Services.AddScoped<ITripLogService, TripLogService>();
+        builder.Services.AddScoped<ITripLogService, Services.TripLogService>();
+        builder.Services.AddSingleton<TripLogPublisher>();
+
 
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pilot Entry API", Version = "v1" });
+        });
 
         var app = builder.Build();
 

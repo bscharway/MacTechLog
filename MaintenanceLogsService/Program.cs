@@ -18,7 +18,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddDbContext<MaintenanceLogsContext>(options =>
-            options.UseSqlServer(builder.Configuration["ConnectionStrings:LocalDev"]));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDev")));
 
         builder.Services.AddScoped<IMaintenanceLogRepository, MaintenanceLogRepository>();
         builder.Services.AddScoped<IMaintenanceTicketRepository, MaintenanceTicketRepository>();
