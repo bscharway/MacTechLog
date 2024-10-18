@@ -61,8 +61,10 @@ namespace PilotEntryService.Services
         /// <param name="tripLogDto">The DTO containing the details of the TripLog to create.</param>
         public async Task CreateTripLogAsync(CreateTripLogDto tripLogDto)
         {
+            //Mapping tripLogDTO to Triplog Entity
             var tripLog = _mapper.Map<TripLog>(tripLogDto);
-            await _tripLogRepository.AddTripLogAsync(tripLog);
+
+            await _tripLogRepository.AddTripLogAsync(tripLog); //Adding it to the database
 
             // Retrieve the auto-generated TripLogId
             tripLog = await _tripLogRepository.GetTripLogByIdAsync(tripLog.Id);
@@ -70,7 +72,7 @@ namespace PilotEntryService.Services
             // Publish to RabbitMQ if there's a remark
             if (!string.IsNullOrEmpty(tripLog.Remarks))
             {
-                var tripLogMessage = new TripLogMessage
+                var tripLogMessage = new TripLogMessage // Message to send to RabbitMQ
                 {
                     TripLogId = tripLog.Id,
                     AircraftRegistration = tripLog.AircraftRegistration,

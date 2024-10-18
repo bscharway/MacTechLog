@@ -1,10 +1,14 @@
 ﻿using MaintenanceLogsService.Data;
 using MaintenanceLogsService.Models.Entities;
+using MaintenanceLogsService.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MaintenanceLogsService.Repository
+namespace MaintenanceLogsService.Repositories
 {
-    // Repository Implementation
+    // Repository Implementation for MaintenanceLog
     public class MaintenanceLogRepository : IMaintenanceLogRepository
     {
         private readonly MaintenanceLogsContext _context;
@@ -20,6 +24,15 @@ namespace MaintenanceLogsService.Repository
                 .Include(m => m.DefectReports)
                 .Include(m => m.PartReplacements)
                 .Include(m => m.OilHydraulicFluidData)
+                .Select(m => new MaintenanceLog
+                {
+                    Id = m.Id,
+                    AircraftRegistration = m.AircraftRegistration,
+                    MaintenanceDate = m.MaintenanceDate,
+                    TechnicianId = m.TechnicianId,
+                    Description = m.Description,
+                    // Include only the necessary fields
+                })
                 .ToListAsync();
         }
 
@@ -55,4 +68,3 @@ namespace MaintenanceLogsService.Repository
         }
     }
 }
-

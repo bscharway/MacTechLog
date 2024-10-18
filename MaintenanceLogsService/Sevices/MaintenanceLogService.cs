@@ -35,20 +35,41 @@ namespace MaintenanceLogsService.Sevices
 
         public async Task AddMaintenanceLogAsync(CreateMaintenanceLogDto maintenanceLogDto)
         {
+            //var maintenanceLog = _mapper.Map<MaintenanceLog>(maintenanceLogDto);
+            //await _maintenanceLogRepository.AddMaintenanceLogAsync(maintenanceLog);
+
+            //// Check if there's an associated ticket
+            //if (maintenanceLogDto.MaintenanceTicketId.HasValue)
+            //{
+            //    var ticket = await _maintenanceTicketRepository.GetMaintenanceTicketByIdAsync(maintenanceLogDto.MaintenanceTicketId.Value);
+            //    if (ticket != null)
+            //    {
+            //        ticket.Status = "Resolved";
+            //        ticket.ResolvedDate = DateTime.UtcNow;
+            //        await _maintenanceTicketRepository.UpdateMaintenanceTicketAsync(ticket);
+            //    }
+            //}
+
+            // Retrieve all tickets in a single query
+            var tickets = await _maintenanceTicketRepository.GetMaintenanceTicketsByIdsAsync(maintenanceLogDto.MaintenanceTicketIds);
+
+            if (tickets.Count != maintenanceLogDto.MaintenanceTicketIds.Count)
+            {
+                throw new KeyNotFoundException("One or more MaintenanceTickets were not found");
+            }
+
             var maintenanceLog = _mapper.Map<MaintenanceLog>(maintenanceLogDto);
             await _maintenanceLogRepository.AddMaintenanceLogAsync(maintenanceLog);
 
-            // Check if there's an associated ticket
-            if (maintenanceLogDto.MaintenanceTicketId.HasValue)
+            // Update MaintenanceTicket statuses to "Resolved"
+            foreach (var ticket in tickets)
             {
-                var ticket = await _maintenanceTicketRepository.GetMaintenanceTicketByIdAsync(maintenanceLogDto.MaintenanceTicketId.Value);
-                if (ticket != null)
-                {
-                    ticket.Status = "Resolved";
-                    ticket.ResolvedDate = DateTime.UtcNow;
-                    await _maintenanceTicketRepository.UpdateMaintenanceTicketAsync(ticket);
-                }
+                ticket.Status = "Resolved";
+                ticket.MaintenanceLogId = maintenanceLog.Id;
+                ticket.ResolvedDate = DateTime.UtcNow;
             }
+
+            await _maintenanceTicketRepository.UpdateMaintenanceTicketsAsync(tickets);
         }
 
         public async Task UpdateMaintenanceLogAsync(int id, CreateMaintenanceLogDto maintenanceLogDto)
@@ -70,6 +91,7 @@ namespace MaintenanceLogsService.Sevices
         public async Task AddMaintenanceTicketAsync(CreateMaintenanceTicketDto ticketDto)
         {
             var ticket = _mapper.Map<MaintenanceTicket>(ticketDto);
+            //ticket.TripLogId = ticketDto.TripLogId;
             ticket.Status = "Open";
             ticket.CreatedDate = DateTime.UtcNow;
             await _maintenanceTicketRepository.AddMaintenanceTicketAsync(ticket);
@@ -77,17 +99,35 @@ namespace MaintenanceLogsService.Sevices
 
         public async Task UpdateMaintenanceTicketStatusAsync(int ticketId, string status)
         {
+            //var ticket = await _maintenanceTicketRepository.GetMaintenanceTicketByIdAsync(ticketId);
+            //if (ticket == null)
+            //{
+            //    throw new KeyNotFoundException("Ticket not found");
+            //}
+            //ticket.Status = status;
+            //if (status == "Resolved")
+            //{
+            //    ticket.ResolvedDate = DateTime.UtcNow;
+            //}
+            //await _maintenanceTicketRepository.UpdateMaintenanceTicketAsync(ticket);
+
             var ticket = await _maintenanceTicketRepository.GetMaintenanceTicketByIdAsync(ticketId);
             if (ticket == null)
             {
                 throw new KeyNotFoundException("Ticket not found");
             }
+
+            SetTicketStatus(ticket, status);
+            await _maintenanceTicketRepository.UpdateMaintenanceTicketAsync(ticket);
+        }
+
+        private void SetTicketStatus(MaintenanceTicket ticket, string status)
+        {
             ticket.Status = status;
             if (status == "Resolved")
             {
                 ticket.ResolvedDate = DateTime.UtcNow;
             }
-            await _maintenanceTicketRepository.UpdateMaintenanceTicketAsync(ticket);
         }
 
         public async Task<IEnumerable<MaintenanceTicketDto>> GetAllTicketsAsync()

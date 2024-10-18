@@ -9,5 +9,8 @@ namespace MaintenanceLogsService.Repository
         Task UpdateMaintenanceTicketAsync(MaintenanceTicket ticket);
         Task<MaintenanceTicket> GetMaintenanceTicketByIdAsync(int id);
         Task<IEnumerable<MaintenanceTicket>> GetAllMaintenanceTicketsAsync();
+        Task<List<MaintenanceTicket>> GetMaintenanceTicketsByIdsAsync(IEnumerable<int> ids);
+        Task UpdateMaintenanceTicketsAsync(IEnumerable<MaintenanceTicket> tickets);
+
     }
 }

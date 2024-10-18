@@ -10,7 +10,7 @@ namespace PilotEntryService.Controllers
     /// API Controller for managing trip logs.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/TripLog")]
     public class TripLogController : ControllerBase
     {
         private readonly ITripLogService _service;

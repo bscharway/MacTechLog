@@ -4,6 +4,7 @@ using MaintenanceLogsService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MaintenanceLogsService.Migrations
 {
     [DbContext(typeof(MaintenanceLogsContext))]
-    partial class MaintenanceLogsContextModelSnapshot : ModelSnapshot
+    [Migration("20241017113602_Trip log Id in ticket if not a FK")]
+    partial class TriplogIdinticketifnotaFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +215,7 @@ namespace MaintenanceLogsService.Migrations
             modelBuilder.Entity("MaintenanceLogsService.Models.Entities.MaintenanceTicket", b =>
                 {
                     b.HasOne("MaintenanceLogsService.Models.Entities.MaintenanceLog", "MaintenanceLog")
-                        .WithMany("ResolvedTickets")
+                        .WithMany()
                         .HasForeignKey("MaintenanceLogId");
 
                     b.Navigation("MaintenanceLog");
@@ -234,8 +237,6 @@ namespace MaintenanceLogsService.Migrations
                     b.Navigation("DefectReports");
 
                     b.Navigation("PartReplacements");
-
-                    b.Navigation("ResolvedTickets");
                 });
 #pragma warning restore 612, 618
         }

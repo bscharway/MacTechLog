@@ -12,6 +12,7 @@ namespace PilotEntryService.MessageBroker
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TripLogPublisher"/> class.
         /// Sets up the RabbitMQ connection, channel, exchange, and queue.
@@ -19,13 +20,18 @@ namespace PilotEntryService.MessageBroker
         public TripLogPublisher()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
+            factory.ClientProvidedName = "Trip Log Publisher";
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
+            string exchangeName = "trip_log_exchange";
+            string queueName = "trip_log_queue";
+            string routingKey = "";
+
             // Declare exchange and queue for message routing
-            _channel.ExchangeDeclare(exchange: "trip_log_exchange", type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queue: "trip_log_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
-            _channel.QueueBind(queue: "trip_log_queue", exchange: "trip_log_exchange", routingKey: "");
+            _channel.ExchangeDeclare(exchangeName, type: ExchangeType.Fanout);
+            _channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueBind(queueName, exchangeName, routingKey, arguments:null);
         }
 
         /// <summary>

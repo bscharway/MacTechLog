@@ -14,5 +14,6 @@ namespace MaintenanceLogsService.Sevices
         Task AddMaintenanceTicketAsync(CreateMaintenanceTicketDto ticketDto);
         Task UpdateMaintenanceTicketStatusAsync(int ticketId, string status);
         Task<IEnumerable<MaintenanceTicketDto>> GetAllTicketsAsync();
+
     }
 }

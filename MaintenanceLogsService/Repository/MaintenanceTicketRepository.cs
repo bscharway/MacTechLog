@@ -1,10 +1,11 @@
 ﻿using MaintenanceLogsService.Data;
 using MaintenanceLogsService.Models.Entities;
+using MaintenanceLogsService.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace MaintenanceLogsService.Repository
+namespace MaintenanceLogsService.Repositories
 {
-    // Maintenance Ticket Repository Implementation
+    // Repository Implementation for MaintenanceTicket
     public class MaintenanceTicketRepository : IMaintenanceTicketRepository
     {
         private readonly MaintenanceLogsContext _context;
@@ -20,9 +21,9 @@ namespace MaintenanceLogsService.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateMaintenanceTicketAsync(MaintenanceTicket ticket)
+        public async Task UpdateMaintenanceTicketAsync(MaintenanceTicket maintenanceTicket)
         {
-            _context.MaintenanceTickets.Update(ticket);
+            _context.MaintenanceTickets.Update(maintenanceTicket);
             await _context.SaveChangesAsync();
         }
 
@@ -34,6 +35,17 @@ namespace MaintenanceLogsService.Repository
         public async Task<IEnumerable<MaintenanceTicket>> GetAllMaintenanceTicketsAsync()
         {
             return await _context.MaintenanceTickets.ToListAsync();
+        }
+
+        public async Task<List<MaintenanceTicket>> GetMaintenanceTicketsByIdsAsync(IEnumerable<int> ids)
+        {
+            return await _context.MaintenanceTickets.Where(t => ids.Contains(t.Id)).ToListAsync();
+        }
+
+        public async Task UpdateMaintenanceTicketsAsync(IEnumerable<MaintenanceTicket> tickets)
+        {
+            _context.MaintenanceTickets.UpdateRange(tickets);
+            await _context.SaveChangesAsync();
         }
     }
 }

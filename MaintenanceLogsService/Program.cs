@@ -2,6 +2,7 @@
 using MaintenanceLogsService.Data;
 using MaintenanceLogsService.MappingProfiles;
 using MaintenanceLogsService.MessageBroker;
+using MaintenanceLogsService.Repositories;
 using MaintenanceLogsService.Repository;
 using MaintenanceLogsService.Sevices;
 using Microsoft.EntityFrameworkCore;
