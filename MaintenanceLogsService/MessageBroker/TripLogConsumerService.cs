@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MaintenanceLogsService.Sevices;
+using MaintenanceLogsService.Services;
 //using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Hosting;
 //using Microsoft.EntityFrameworkCore.Metadata;

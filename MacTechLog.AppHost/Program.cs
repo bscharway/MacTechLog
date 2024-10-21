@@ -13,4 +13,6 @@ builder.AddProject<Projects.PilotEntryService>("pilotentryservice");
 
 builder.AddProject<Projects.MaintenanceLogsService>("maintenancelogsservice");
 
+builder.AddProject<Projects.AircraftService>("aircraftservice");
+
 builder.Build().Run();

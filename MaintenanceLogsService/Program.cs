@@ -4,7 +4,7 @@ using MaintenanceLogsService.MappingProfiles;
 using MaintenanceLogsService.MessageBroker;
 using MaintenanceLogsService.Repositories;
 using MaintenanceLogsService.Repository;
-using MaintenanceLogsService.Sevices;
+using MaintenanceLogsService.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 

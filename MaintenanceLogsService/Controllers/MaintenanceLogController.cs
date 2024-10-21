@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MaintenanceLogsService.Models.DTOs;
-using MaintenanceLogsService.Sevices;
+using MaintenanceLogsService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,8 +45,15 @@ namespace MaintenanceLogsService.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await _service.AddMaintenanceLogAsync(maintenanceLogDto);
-            return CreatedAtAction(nameof(GetMaintenanceLogById), new { id = maintenanceLogDto.AircraftRegistration }, maintenanceLogDto);
+            try
+            {
+                var createdLog = await _service.AddMaintenanceLogAsync(maintenanceLogDto);
+                return CreatedAtAction(nameof(GetMaintenanceLogById), new { id = createdLog.Id }, createdLog);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
         }
 
         [HttpPut("logs/{id}")]
@@ -54,15 +61,15 @@ namespace MaintenanceLogsService.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
             try
             {
                 await _service.UpdateMaintenanceLogAsync(id, maintenanceLogDto);
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(new { Message = ex.Message });
             }
             return NoContent();
         }
@@ -74,9 +81,9 @@ namespace MaintenanceLogsService.Controllers
             {
                 await _service.DeleteMaintenanceLogAsync(id);
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(new { Message = ex.Message });
             }
             return NoContent();
         }
@@ -88,8 +95,8 @@ namespace MaintenanceLogsService.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await _service.AddMaintenanceTicketAsync(ticketDto);
-            return Ok();
+            var createdTicket = await _service.AddMaintenanceTicketAsync(ticketDto);
+            return CreatedAtAction(nameof(GetMaintenanceTicketById), new { id = createdTicket.Id }, createdTicket);
         }
 
         [HttpPut("tickets/{id}/status")]
@@ -97,13 +104,13 @@ namespace MaintenanceLogsService.Controllers
         {
             try
             {
-                await _service.UpdateMaintenanceTicketStatusAsync(id, status);
+                var updatedTicket = await _service.UpdateMaintenanceTicketStatusAsync(id, status);
+                return Ok(updatedTicket);
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+                return NotFound(new { Message = ex.Message });
             }
-            return NoContent();
         }
 
         [HttpGet("tickets")]
@@ -111,6 +118,17 @@ namespace MaintenanceLogsService.Controllers
         {
             var tickets = await _service.GetAllTicketsAsync();
             return Ok(tickets);
+        }
+
+        [HttpGet("tickets/{id}")]
+        public async Task<IActionResult> GetMaintenanceTicketById(int id)
+        {
+            var ticket = await _service.GetMaintenanceTicketByIdAsync(id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+            return Ok(ticket);
         }
     }
 }
