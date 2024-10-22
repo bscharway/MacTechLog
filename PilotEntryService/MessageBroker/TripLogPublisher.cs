@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using PilotEntryService.Models.Entities;
 using RabbitMQ.Client;
 
 namespace PilotEntryService.MessageBroker
@@ -48,6 +49,21 @@ namespace PilotEntryService.MessageBroker
                                   body: body);
         }
 
+        // PilotEntryService - Updated to publish event with FuelConsumed
+        public async Task LogTripCompletion(TripLog tripLog)
+        {
+            var completedEvent = new TripLogCompletedEvent
+            {
+                AircraftRegistration = tripLog.AircraftRegistration,
+                FlightHours = double.Parse(tripLog.ArrivalTime - tripLog.DepartureTime),
+                Cycles = tripLog.Cycles,
+                FuelConsumed = tripLog.FuelConsumed // Include fuel consumed
+            };
+
+            _tripLogPublisher.PublishTripLogCompletedEvent(completedEvent);
+        }
+
+
         /// <summary>
         /// Disposes the RabbitMQ connection and channel.
         /// </summary>
@@ -77,5 +93,14 @@ namespace PilotEntryService.MessageBroker
         /// Gets or sets the remark related to the TripLog.
         /// </summary>
         public string Remark { get; set; }
+    }
+
+    // TripLogCompletedEvent - Updated to include FuelConsumed
+    public class TripLogCompletedEvent
+    {
+        public string AircraftRegistration { get; set; }
+        public double FlightHours { get; set; }
+        public int Cycles { get; set; }
+        public int FuelConsumed { get; set; } // Amount of fuel consumed during the trip
     }
 }

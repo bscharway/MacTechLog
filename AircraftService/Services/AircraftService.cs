@@ -143,5 +143,30 @@ namespace AircraftService.Services
             await _aircraftRepository.UpdateAircraftAsync(aircraft);
         }
 
+        public async Task UpdateFlightHoursCyclesAndFuelAsync(int aircraftId, int flightHours, int cycles, int fuelConsumed)
+        {
+            var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftId);
+            if (aircraft == null)
+            {
+                throw new KeyNotFoundException($"Aircraft with ID {aircraftId} not found.");
+            }
+
+            // Update flight hours and cycles
+            aircraft.TotalFlightHours += flightHours;
+            aircraft.Cycles += cycles;
+
+            // Update fuel management data
+            if (aircraft.FuelManagementData != null)
+            {
+                aircraft.FuelManagementData.FuelOnBoard -= fuelConsumed;
+                if (aircraft.FuelManagementData.FuelOnBoard < 0)
+                {
+                    aircraft.FuelManagementData.FuelOnBoard = 0; // Ensure fuel on board is not negative
+                }
+            }
+
+            await _aircraftRepository.UpdateAircraftAsync(aircraft);
+        }
+
     }
 }

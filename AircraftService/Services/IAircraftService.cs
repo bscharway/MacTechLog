@@ -14,5 +14,8 @@ namespace AircraftService.Services
         Task DeleteAircraftAsync(int id);
         Task UpdateFuelManagementAsync(int id, UpdateFuelManagementDto fuelManagementDto);
         Task UpdateFlightHoursAndCyclesAsync(int aircraftId, int additionalHours, int additionalCycles);
+
+        // Method for updating flight hours, cycles, and fuel
+        Task UpdateFlightHoursCyclesAndFuelAsync(int aircraftId, int flightHours, int cycles, int fuelConsumed);
     }
 }
