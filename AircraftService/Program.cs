@@ -26,6 +26,11 @@ public class Program
         builder.Services.AddScoped<IAircraftRepository, AircraftRepository>();
         builder.Services.AddScoped<IAircraftService, AircraftService.Services.AircraftService>();
         builder.Services.AddScoped<IFuelManagementRepository, FuelManagementRepository>();
+        builder.Services.AddScoped<ITripLogService, TripLogService>();
+        builder.Services.AddScoped<IFuelManagementService,  FuelManagementService>();
+
+        builder.Services.AddHostedService<FlightHoursUpdateListener>();
+
 
         // AutoMapper configuration
         builder.Services.AddAutoMapper(typeof(Program));

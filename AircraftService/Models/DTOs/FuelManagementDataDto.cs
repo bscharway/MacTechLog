@@ -3,10 +3,12 @@
     // DTO for fuel management data
     public class FuelManagementDataDto
     {
-        public double FuelOnBoard { get; set; }
-        public double RecentUplift { get; set; }
-        public double PlannedUplift { get; set; }
-        public DateTime LastRefueled { get; set; }
-        public int FuelCapacity { get; set; } // Add this property
+        public double LatestRecordedFuelOnBoard { get; set; }
+        public double? RevisedParkingFuel { get; set; }
+        public double PlannedUplift { get; set; } // Planned uplift in liters
+        public double? ActualUplift { get; set; }
+        public double? UpliftInLiters { get; set; }
+        public double LandingFuel { get; set; }
+        public int AircraftId { get; set; }
     }
 }

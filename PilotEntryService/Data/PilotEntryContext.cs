@@ -19,8 +19,8 @@ namespace PilotEntryService.Data
 
         public DbSet<TripLog> TripLogs { get; set; }
         public DbSet<De_Anti_IcingData> DeAntiIcingData { get; set; }
-        public DbSet<FuelData> FuelData { get; set; }
-        public DbSet<Inspection> Inspections { get; set; }
+        //public DbSet<FuelData> FuelData { get; set; }
+        //public DbSet<Inspection> Inspections { get; set; }
 
         /// <summary>
         /// Configures the model and seeds initial data.
@@ -48,45 +48,45 @@ namespace PilotEntryService.Data
                 }
             );
 
-            // Seed data for FuelData
-            modelBuilder.Entity<FuelData>().HasData(
-                new FuelData
-                {
-                    Id = 1,
-                    ParkingFuel = 1000,
-                    RevisedParkingFuel = 950,
-                    PlannedUplift = 500,
-                    ActualUplift = 480,
-                    FuelOnBoard = 1500,
-                    UpliftInLiters = 600
-                },
-                new FuelData
-                {
-                    Id = 2,
-                    ParkingFuel = 1000,
-                    RevisedParkingFuel = 950,
-                    PlannedUplift = 500,
-                    ActualUplift = 480,
-                    FuelOnBoard = 1500,
-                    UpliftInLiters = 600
-                }
-            );
+            //// Seed data for FuelData
+            //modelBuilder.Entity<FuelData>().HasData(
+            //    new FuelData
+            //    {
+            //        Id = 1,
+            //        ParkingFuel = 1000,
+            //        RevisedParkingFuel = 950,
+            //        PlannedUplift = 500,
+            //        ActualUplift = 480,
+            //        FuelOnBoard = 1500,
+            //        UpliftInLiters = 600
+            //    },
+            //    new FuelData
+            //    {
+            //        Id = 2,
+            //        ParkingFuel = 1000,
+            //        RevisedParkingFuel = 950,
+            //        PlannedUplift = 500,
+            //        ActualUplift = 480,
+            //        FuelOnBoard = 1500,
+            //        UpliftInLiters = 600
+            //    }
+            //);
 
-            // Seed data for Inspection
-            modelBuilder.Entity<Inspection>().HasData(
-                new Inspection
-                {
-                    Id = 1,
-                    PreFlightInspectionCompleted = true,
-                    PostFlightInspectionCompleted = true
-                },
-                new Inspection
-                {
-                    Id = 2,
-                    PreFlightInspectionCompleted = true,
-                    PostFlightInspectionCompleted = true
-                }
-            );
+            //// Seed data for Inspection
+            //modelBuilder.Entity<Inspection>().HasData(
+            //    new Inspection
+            //    {
+            //        Id = 1,
+            //        PreFlightInspectionCompleted = true,
+            //        PostFlightInspectionCompleted = true
+            //    },
+            //    new Inspection
+            //    {
+            //        Id = 2,
+            //        PreFlightInspectionCompleted = true,
+            //        PostFlightInspectionCompleted = true
+            //    }
+            //);
 
             // Seed data for TripLog
             modelBuilder.Entity<TripLog>().HasData(
@@ -96,14 +96,26 @@ namespace PilotEntryService.Data
                     FlightNumber = "AB123",
                     AircraftRegistration = "N12345",
                     PilotId = "P001",
-                    DepartureTime = DateTime.UtcNow.AddHours(-5),
-                    ArrivalTime = DateTime.UtcNow,
+                    OffBlockTime = DateTime.UtcNow.AddHours(-5),
+                    ActualTimeOfDeparture = (DateTime.UtcNow.AddHours(-5)).AddMinutes(5),
+                    ActualTimeOfLanding = DateTime.UtcNow.AddMinutes(-5),
+                    OnBlockTime = DateTime.UtcNow,
                     DepartureAirport = "JFK",
                     DestinationAirport = "LAX",
+                    ParkingFuel = 1000,
+                    RevisedParkingFuel = 950,
+                    PlannedUplift = 500,
+                    ActualUplift = 480,
+                    FuelOnBoard = 1500,
+                    UpliftInLiters = 600,
+                    landingfuel = 800,
                     Remarks = "Smooth flight",
+                    PreFlightInspectionCompleted = true,
+                    PostFlightInspectionCompleted = true,
+                    Cycles = 1,
                     DeAntiIcingDataId = 1,
-                    FuelDataId = 1,
-                    InspectionId = 1
+                    
+                    
                 },
                 new TripLog
                 {
@@ -111,14 +123,24 @@ namespace PilotEntryService.Data
                     FlightNumber = "AB124",
                     AircraftRegistration = "N12345",
                     PilotId = "P002",
-                    DepartureTime = DateTime.UtcNow.AddHours(-10),
-                    ArrivalTime = DateTime.UtcNow.AddHours(-5),
+                    OffBlockTime = DateTime.UtcNow.AddHours(-10),
+                    ActualTimeOfDeparture = (DateTime.UtcNow.AddHours(-10)).AddMinutes(5),
+                    ActualTimeOfLanding = (DateTime.UtcNow.AddHours(-5)).AddMinutes(-5),
+                    OnBlockTime = DateTime.UtcNow.AddHours(-5),
                     DepartureAirport = "BLL",
                     DestinationAirport = "NVI",
-                    Remarks = "Kinda bumpy",
+                    ParkingFuel = 1000,
+                    RevisedParkingFuel = 950,
+                    PlannedUplift = 500,
+                    ActualUplift = 480,
+                    FuelOnBoard = 1500,
+                    UpliftInLiters = 600,
+                    landingfuel = 700,
+                    Remarks = "Kinda bumpy",                    
+                    PreFlightInspectionCompleted = true,
+                    PostFlightInspectionCompleted = true,
+                    Cycles = 1,
                     DeAntiIcingDataId = 2,
-                    FuelDataId = 2,
-                    InspectionId = 2
                 }
             );
         }

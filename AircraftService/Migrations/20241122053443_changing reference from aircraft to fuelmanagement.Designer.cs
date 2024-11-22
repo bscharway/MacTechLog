@@ -4,6 +4,7 @@ using AircraftService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AircraftService.Migrations
 {
     [DbContext(typeof(AircraftDbContext))]
-    partial class AircraftDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122053443_changing reference from aircraft to fuelmanagement")]
+    partial class changingreferencefromaircrafttofuelmanagement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +27,11 @@ namespace AircraftService.Migrations
 
             modelBuilder.Entity("AircraftService.Models.Entities.Aircraft", b =>
                 {
-                    b.Property<string>("Registration")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CurrentStatus")
                         .IsRequired()
@@ -44,66 +49,77 @@ namespace AircraftService.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Registration")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<int>("TotalFlightHours")
                         .HasColumnType("int");
 
-                    b.HasKey("Registration");
+                    b.HasKey("Id");
 
                     b.ToTable("Aircrafts");
 
                     b.HasData(
                         new
                         {
-                            Registration = "N12345",
+                            Id = 1,
                             CurrentStatus = "Airworthy",
                             Cycles = 1500,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5375),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7723),
                             Model = "Boeing 737",
+                            Registration = "N12345",
                             TotalFlightHours = 5000
                         },
                         new
                         {
-                            Registration = "G67890",
+                            Id = 2,
                             CurrentStatus = "AOG",
                             Cycles = 1200,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5377),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7727),
                             Model = "Airbus A320",
+                            Registration = "G67890",
                             TotalFlightHours = 4000
                         },
                         new
                         {
-                            Registration = "D45678",
+                            Id = 3,
                             CurrentStatus = "Airworthy",
                             Cycles = 3000,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5379),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7729),
                             Model = "Boeing 747",
+                            Registration = "D45678",
                             TotalFlightHours = 10000
                         },
                         new
                         {
-                            Registration = "F12367",
+                            Id = 4,
                             CurrentStatus = "Under Maintenance",
                             Cycles = 2000,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5380),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7731),
                             Model = "Airbus A380",
+                            Registration = "F12367",
                             TotalFlightHours = 7000
                         },
                         new
                         {
-                            Registration = "H89012",
+                            Id = 5,
                             CurrentStatus = "Airworthy",
                             Cycles = 800,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5382),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7733),
                             Model = "Embraer E190",
+                            Registration = "H89012",
                             TotalFlightHours = 2000
                         },
                         new
                         {
-                            Registration = "I34567",
+                            Id = 6,
                             CurrentStatus = "Airworthy",
                             Cycles = 300,
-                            LastUpdated = new DateTime(2024, 11, 22, 14, 38, 28, 832, DateTimeKind.Utc).AddTicks(5383),
+                            LastUpdated = new DateTime(2024, 11, 22, 5, 34, 43, 37, DateTimeKind.Utc).AddTicks(7735),
                             Model = "Cessna 172",
+                            Registration = "I34567",
                             TotalFlightHours = 500
                         });
                 });
@@ -119,9 +135,8 @@ namespace AircraftService.Migrations
                     b.Property<double?>("ActualUplift")
                         .HasColumnType("float");
 
-                    b.Property<string>("AircraftRegistration")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<int>("AircraftId")
+                        .HasColumnType("int");
 
                     b.Property<double?>("LandingFuel")
                         .HasColumnType("float");
@@ -146,7 +161,7 @@ namespace AircraftService.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AircraftRegistration");
+                    b.HasIndex("AircraftId");
 
                     b.ToTable("FuelManagementData");
 
@@ -155,7 +170,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 1,
                             ActualUplift = 5000.0,
-                            AircraftRegistration = "N12345",
+                            AircraftId = 1,
                             LandingFuel = 10000.0,
                             LatestRecordedFuelOnBoard = 15000.0,
                             PlannedUplift = 5000.0,
@@ -166,7 +181,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 2,
                             ActualUplift = 3100.0,
-                            AircraftRegistration = "G67890",
+                            AircraftId = 2,
                             LandingFuel = 6000.0,
                             LatestRecordedFuelOnBoard = 12000.0,
                             PlannedUplift = 3000.0,
@@ -177,7 +192,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 3,
                             ActualUplift = 30100.0,
-                            AircraftRegistration = "D45678",
+                            AircraftId = 3,
                             LandingFuel = 30000.0,
                             LatestRecordedFuelOnBoard = 20000.0,
                             PlannedUplift = 30000.0,
@@ -188,7 +203,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 4,
                             ActualUplift = 21000.0,
-                            AircraftRegistration = "F12367",
+                            AircraftId = 4,
                             LandingFuel = 30000.0,
                             LatestRecordedFuelOnBoard = 25000.0,
                             PlannedUplift = 20000.0,
@@ -199,7 +214,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 5,
                             ActualUplift = 2100.0,
-                            AircraftRegistration = "H89012",
+                            AircraftId = 5,
                             LandingFuel = 3400.0,
                             LatestRecordedFuelOnBoard = 5000.0,
                             PlannedUplift = 2000.0,
@@ -210,7 +225,7 @@ namespace AircraftService.Migrations
                         {
                             Id = 6,
                             ActualUplift = 22100.0,
-                            AircraftRegistration = "I34567",
+                            AircraftId = 6,
                             LandingFuel = 32400.0,
                             LatestRecordedFuelOnBoard = 52000.0,
                             PlannedUplift = 22000.0,
@@ -223,7 +238,7 @@ namespace AircraftService.Migrations
                 {
                     b.HasOne("AircraftService.Models.Entities.Aircraft", "Aircraft")
                         .WithMany()
-                        .HasForeignKey("AircraftRegistration")
+                        .HasForeignKey("AircraftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

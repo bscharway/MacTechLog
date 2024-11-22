@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Json;
-using PilotEntryService.Models.Entities;
 using RabbitMQ.Client;
 
 namespace PilotEntryService.MessageBroker
@@ -13,11 +12,13 @@ namespace PilotEntryService.MessageBroker
         private readonly IConnection _connection;
         private readonly IModel _channel;
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TripLogPublisher"/> class.
-        /// Sets up the RabbitMQ connection, channel, exchange, and queue.
+        /// Sets up the RabbitMQ connection, channel, exchange, and queues.
         /// </summary>
+
+
+
         public TripLogPublisher()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
@@ -26,43 +27,35 @@ namespace PilotEntryService.MessageBroker
             _channel = _connection.CreateModel();
 
             string exchangeName = "trip_log_exchange";
-            string queueName = "trip_log_queue";
-            string routingKey = "";
+            string flightHoursQueue = "flight_hours_update_queue";
+            string fuelManagementQueue = "fuel_management_update_queue";
+            string maintenanceQueue = "trip_log_queue";
 
-            // Declare exchange and queue for message routing
+            // Declare exchange and queues for message routing
             _channel.ExchangeDeclare(exchangeName, type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-            _channel.QueueBind(queueName, exchangeName, routingKey, arguments:null);
+            _channel.QueueDeclare(flightHoursQueue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(fuelManagementQueue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(maintenanceQueue, durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+            // Bind queues to exchange
+            _channel.QueueBind(flightHoursQueue, exchangeName, routingKey: "");
+            _channel.QueueBind(fuelManagementQueue, exchangeName, routingKey: "");
+            _channel.QueueBind(maintenanceQueue, exchangeName, routingKey: "");
         }
 
         /// <summary>
-        /// Publishes a TripLog message to the RabbitMQ exchange.
+        /// Publishes a TripLogCompletedEvent message to the RabbitMQ exchange.
         /// </summary>
-        /// <param name="message">The TripLog message to publish.</param>
-        public void PublishTripLog(TripLogMessage message)
+        /// <param name="completedEvent">The TripLogCompletedEvent to publish.</param>
+        public void PublishTripLogCompletedEvent(TripLogCompletedEvent completedEvent)
         {
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(completedEvent));
 
             _channel.BasicPublish(exchange: "trip_log_exchange",
                                   routingKey: "",
                                   basicProperties: null,
                                   body: body);
         }
-
-        // PilotEntryService - Updated to publish event with FuelConsumed
-        public async Task LogTripCompletion(TripLog tripLog)
-        {
-            var completedEvent = new TripLogCompletedEvent
-            {
-                AircraftRegistration = tripLog.AircraftRegistration,
-                FlightHours = double.Parse(tripLog.ArrivalTime - tripLog.DepartureTime),
-                Cycles = tripLog.Cycles,
-                FuelConsumed = tripLog.FuelConsumed // Include fuel consumed
-            };
-
-            _tripLogPublisher.PublishTripLogCompletedEvent(completedEvent);
-        }
-
 
         /// <summary>
         /// Disposes the RabbitMQ connection and channel.
@@ -77,7 +70,7 @@ namespace PilotEntryService.MessageBroker
     /// <summary>
     /// Represents a TripLog message to be published to RabbitMQ.
     /// </summary>
-    public class TripLogMessage
+    public class TripLogCompletedEvent
     {
         /// <summary>
         /// Gets or sets the unique identifier for the TripLog.
@@ -90,17 +83,23 @@ namespace PilotEntryService.MessageBroker
         public string AircraftRegistration { get; set; }
 
         /// <summary>
+        /// Gets or sets the number of flight hours to add.
+        /// </summary>
+        public int FlightHours { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of cycles to add.
+        /// </summary>
+        public int Cycles { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of fuel consumed during the trip.
+        /// </summary>
+        public double? LandingFuel { get; set; }
+
+        /// <summary>
         /// Gets or sets the remark related to the TripLog.
         /// </summary>
         public string Remark { get; set; }
-    }
-
-    // TripLogCompletedEvent - Updated to include FuelConsumed
-    public class TripLogCompletedEvent
-    {
-        public string AircraftRegistration { get; set; }
-        public double FlightHours { get; set; }
-        public int Cycles { get; set; }
-        public int FuelConsumed { get; set; } // Amount of fuel consumed during the trip
     }
 }

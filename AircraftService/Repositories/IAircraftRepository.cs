@@ -9,9 +9,9 @@ namespace AircraftService.Repositories
     public interface IAircraftRepository
     {
         Task<IEnumerable<Aircraft>> GetAllAircraftsAsync();
-        Task<Aircraft> GetAircraftByIdAsync(int id);
+        Task<Aircraft> GetAircraftByIdAsync(string id);
         Task AddAircraftAsync(Aircraft aircraft);
         Task UpdateAircraftAsync(Aircraft aircraft);
-        Task DeleteAircraftAsync(int id);
+        Task DeleteAircraftAsync(string id);
     }
 }

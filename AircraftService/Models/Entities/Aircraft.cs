@@ -5,9 +5,9 @@ namespace AircraftService.Models.Entities
 {
     public class Aircraft
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
-        [Required]
+        [Key]
         [MaxLength(10)]
         public string Registration { get; set; }
 
@@ -25,8 +25,8 @@ namespace AircraftService.Models.Entities
         public int TotalFlightHours { get; set; } 
         public int Cycles { get; set; } 
 
-        [Required]
-        public int FuelManagementDataId { get; set; }
-        public FuelManagementData FuelManagementData { get; set; }
+        //[Required]
+        //public int FuelManagementDataId { get; set; }
+        //public FuelManagementData FuelManagementData { get; set; }
     }
 }

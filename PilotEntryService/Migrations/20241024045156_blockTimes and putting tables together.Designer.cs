@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PilotEntryService.Data;
 
@@ -11,9 +12,11 @@ using PilotEntryService.Data;
 namespace PilotEntryService.Migrations
 {
     [DbContext(typeof(PilotEntryContext))]
-    partial class PilotEntryContextModelSnapshot : ModelSnapshot
+    [Migration("20241024045156_blockTimes and putting tables together")]
+    partial class blockTimesandputtingtablestogether
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,15 +53,68 @@ namespace PilotEntryService.Migrations
                             Id = 1,
                             FluidType = 1,
                             MixtureRatio = "50/50",
-                            Time = new TimeOnly(1, 8, 45, 680).Add(TimeSpan.FromTicks(233))
+                            Time = new TimeOnly(0, 51, 55, 968).Add(TimeSpan.FromTicks(9549))
                         },
                         new
                         {
                             Id = 2,
                             FluidType = 2,
                             MixtureRatio = "50/50",
-                            Time = new TimeOnly(20, 8, 45, 680).Add(TimeSpan.FromTicks(250))
+                            Time = new TimeOnly(19, 51, 55, 968).Add(TimeSpan.FromTicks(9563))
                         });
+                });
+
+            modelBuilder.Entity("PilotEntryService.Models.Entities.FuelData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double?>("ActualUplift")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("FuelOnBoard")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ParkingFuel")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("PlannedUplift")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("RevisedParkingFuel")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("UpliftInLiters")
+                        .HasColumnType("float");
+
+                    b.Property<double>("landingfuel")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FuelData");
+                });
+
+            modelBuilder.Entity("PilotEntryService.Models.Entities.Inspection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("PostFlightInspectionCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("PreFlightInspectionCompleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inspections");
                 });
 
             modelBuilder.Entity("PilotEntryService.Models.Entities.TripLog", b =>
@@ -149,18 +205,18 @@ namespace PilotEntryService.Migrations
                         new
                         {
                             Id = 1,
-                            ActualTimeOfDeparture = new DateTime(2024, 10, 24, 0, 13, 45, 680, DateTimeKind.Utc).AddTicks(420),
-                            ActualTimeOfLanding = new DateTime(2024, 10, 24, 5, 3, 45, 680, DateTimeKind.Utc).AddTicks(421),
+                            ActualTimeOfDeparture = new DateTime(2024, 10, 23, 23, 56, 55, 968, DateTimeKind.Utc).AddTicks(9691),
+                            ActualTimeOfLanding = new DateTime(2024, 10, 24, 4, 46, 55, 968, DateTimeKind.Utc).AddTicks(9696),
                             ActualUplift = 480.0,
                             AircraftRegistration = "N12345",
-                            Cycles = 1,
+                            Cycles = 0,
                             DeAntiIcingDataId = 1,
                             DepartureAirport = "JFK",
                             DestinationAirport = "LAX",
                             FlightNumber = "AB123",
                             FuelOnBoard = 1500.0,
-                            OffBlockTime = new DateTime(2024, 10, 24, 0, 8, 45, 680, DateTimeKind.Utc).AddTicks(419),
-                            OnBlockTime = new DateTime(2024, 10, 24, 5, 8, 45, 680, DateTimeKind.Utc).AddTicks(423),
+                            OffBlockTime = new DateTime(2024, 10, 23, 23, 51, 55, 968, DateTimeKind.Utc).AddTicks(9689),
+                            OnBlockTime = new DateTime(2024, 10, 24, 4, 51, 55, 968, DateTimeKind.Utc).AddTicks(9697),
                             ParkingFuel = 1000.0,
                             PilotId = "P001",
                             PlannedUplift = 500.0,
@@ -174,18 +230,18 @@ namespace PilotEntryService.Migrations
                         new
                         {
                             Id = 2,
-                            ActualTimeOfDeparture = new DateTime(2024, 10, 23, 19, 13, 45, 680, DateTimeKind.Utc).AddTicks(436),
-                            ActualTimeOfLanding = new DateTime(2024, 10, 24, 0, 3, 45, 680, DateTimeKind.Utc).AddTicks(437),
+                            ActualTimeOfDeparture = new DateTime(2024, 10, 23, 18, 56, 55, 968, DateTimeKind.Utc).AddTicks(9707),
+                            ActualTimeOfLanding = new DateTime(2024, 10, 23, 23, 46, 55, 968, DateTimeKind.Utc).AddTicks(9708),
                             ActualUplift = 480.0,
                             AircraftRegistration = "N12345",
-                            Cycles = 1,
+                            Cycles = 0,
                             DeAntiIcingDataId = 2,
                             DepartureAirport = "BLL",
                             DestinationAirport = "NVI",
                             FlightNumber = "AB124",
                             FuelOnBoard = 1500.0,
-                            OffBlockTime = new DateTime(2024, 10, 23, 19, 8, 45, 680, DateTimeKind.Utc).AddTicks(436),
-                            OnBlockTime = new DateTime(2024, 10, 24, 0, 8, 45, 680, DateTimeKind.Utc).AddTicks(438),
+                            OffBlockTime = new DateTime(2024, 10, 23, 18, 51, 55, 968, DateTimeKind.Utc).AddTicks(9706),
+                            OnBlockTime = new DateTime(2024, 10, 23, 23, 51, 55, 968, DateTimeKind.Utc).AddTicks(9708),
                             ParkingFuel = 1000.0,
                             PilotId = "P002",
                             PlannedUplift = 500.0,

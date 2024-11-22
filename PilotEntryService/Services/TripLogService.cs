@@ -15,6 +15,7 @@ namespace PilotEntryService.Services
         private readonly ITripLogRepository _tripLogRepository;
         private readonly TripLogPublisher _tripLogPublisher;
         private readonly IMapper _mapper;
+        private readonly ILogger<TripLogService> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TripLogService"/> class.
@@ -22,11 +23,12 @@ namespace PilotEntryService.Services
         /// <param name="tripLogRepository">The repository for TripLog entities.</param>
         /// <param name="tripLogPublisher">The publisher for TripLog messages.</param>
         /// <param name="mapper">The mapper for converting between entities and DTOs.</param>
-        public TripLogService(ITripLogRepository tripLogRepository, TripLogPublisher tripLogPublisher, IMapper mapper)
+        public TripLogService(ITripLogRepository tripLogRepository, TripLogPublisher tripLogPublisher, IMapper mapper, ILogger<TripLogService> logger)
         {
             _tripLogRepository = tripLogRepository;
             _tripLogPublisher = tripLogPublisher;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -59,27 +61,59 @@ namespace PilotEntryService.Services
         /// Creates a new TripLog asynchronously.
         /// </summary>
         /// <param name="tripLogDto">The DTO containing the details of the TripLog to create.</param>
+        //public async Task CreateTripLogAsync(CreateTripLogDto tripLogDto)
+        //{
+        //    //Mapping tripLogDTO to Triplog Entity
+        //    var tripLog = _mapper.Map<TripLog>(tripLogDto);
+
+        //    await _tripLogRepository.AddTripLogAsync(tripLog); //Adding it to the database
+
+        //    // Retrieve the auto-generated TripLogId
+        //    tripLog = await _tripLogRepository.GetTripLogByIdAsync(tripLog.Id);
+
+        //    // Publish to RabbitMQ if there's a remark
+        //    if (!string.IsNullOrEmpty(tripLog.Remarks))
+        //    {
+        //        var tripLogMessage = new TripLogCompletedEvent // Message to send to RabbitMQ
+        //        {
+        //            TripLogId = tripLog.Id,
+        //            AircraftRegistration = tripLog.AircraftRegistration,
+        //            Remark = tripLog.Remarks
+        //        };
+
+        //        _tripLogPublisher.PublishTripLogCompletedEvent(tripLogMessage);
+        //    }
+        //}
+
         public async Task CreateTripLogAsync(CreateTripLogDto tripLogDto)
         {
             //Mapping tripLogDTO to Triplog Entity
             var tripLog = _mapper.Map<TripLog>(tripLogDto);
 
-            await _tripLogRepository.AddTripLogAsync(tripLog); //Adding it to the database
-
-            // Retrieve the auto-generated TripLogId
-            tripLog = await _tripLogRepository.GetTripLogByIdAsync(tripLog.Id);
-
-            // Publish to RabbitMQ if there's a remark
-            if (!string.IsNullOrEmpty(tripLog.Remarks))
+            try
             {
-                var tripLogMessage = new TripLogMessage // Message to send to RabbitMQ
+                // Save the trip log to the repository
+                await _tripLogRepository.UpdateTripLogAsync(tripLog);
+                _logger.LogInformation($"Trip log with ID {tripLog.Id} has been updated.");
+
+                // Publish an event to create maintenance Ticket, update flight hours, cycles, and fuel management
+                var completedEvent = new TripLogCompletedEvent
                 {
                     TripLogId = tripLog.Id,
                     AircraftRegistration = tripLog.AircraftRegistration,
+                    FlightHours = ((int)(tripLog.OnBlockTime - tripLog.OffBlockTime).TotalMinutes)/60,
+                    Cycles = tripLog.Cycles,
+                    LandingFuel = tripLog.landingfuel,
                     Remark = tripLog.Remarks
                 };
 
-                _tripLogPublisher.PublishTripLog(tripLogMessage);
+                _tripLogPublisher.PublishTripLogCompletedEvent(completedEvent);
+                _logger.LogInformation($"Trip log completed event for ID {tripLog.Id} has been published.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while completing the trip log with ID {tripLog.Id}: {ex.Message}");
+                throw;
             }
         }
 
@@ -89,6 +123,31 @@ namespace PilotEntryService.Services
         /// <param name="id">The ID of the TripLog to update.</param>
         /// <param name="tripLogDto">The DTO containing the updated details of the TripLog.</param>
         /// <exception cref="KeyNotFoundException">Thrown when the TripLog is not found.</exception>
+        //public async Task UpdateTripLogAsync(int id, CreateTripLogDto tripLogDto)
+        //{
+        //    var tripLog = await _tripLogRepository.GetTripLogByIdAsync(id);
+        //    if (tripLog == null)
+        //    {
+        //        throw new KeyNotFoundException("TripLog not found");
+        //    }
+
+        //    _mapper.Map(tripLogDto, tripLog);
+        //    await _tripLogRepository.UpdateTripLogAsync(tripLog);
+
+        //    // Publish to RabbitMQ if there's a remark
+        //    if (!string.IsNullOrEmpty(tripLog.Remarks))
+        //    {
+        //        var tripLogMessage = new TripLogMessage
+        //        {
+        //            TripLogId = tripLog.Id,
+        //            AircraftRegistration = tripLog.AircraftRegistration,
+        //            Remark = tripLog.Remarks
+        //        };
+
+        //        _tripLogPublisher.PublishTripLog(tripLogMessage);
+        //    }
+        //}
+
         public async Task UpdateTripLogAsync(int id, CreateTripLogDto tripLogDto)
         {
             var tripLog = await _tripLogRepository.GetTripLogByIdAsync(id);
@@ -100,19 +159,21 @@ namespace PilotEntryService.Services
             _mapper.Map(tripLogDto, tripLog);
             await _tripLogRepository.UpdateTripLogAsync(tripLog);
 
-            // Publish to RabbitMQ if there's a remark
-            if (!string.IsNullOrEmpty(tripLog.Remarks))
+            // Publish an event to create maintenance Ticket, update flight hours, cycles, and fuel management
+            var completedEvent = new TripLogCompletedEvent
             {
-                var tripLogMessage = new TripLogMessage
-                {
-                    TripLogId = tripLog.Id,
-                    AircraftRegistration = tripLog.AircraftRegistration,
-                    Remark = tripLog.Remarks
-                };
-
-                _tripLogPublisher.PublishTripLog(tripLogMessage);
-            }
+                TripLogId = tripLog.Id,
+                AircraftRegistration = tripLog.AircraftRegistration,
+                FlightHours = ((int)(tripLog.OnBlockTime - tripLog.OffBlockTime).TotalMinutes) / 60,
+                Cycles = tripLog.Cycles,
+                LandingFuel = tripLog.landingfuel,
+                Remark = tripLog.Remarks
+            };
+            _tripLogPublisher.PublishTripLogCompletedEvent(completedEvent);
+            _logger.LogInformation($"Trip log completed event for ID {tripLog.Id} has been published.");
         }
+
+
 
         /// <summary>
         /// Deletes a TripLog by ID asynchronously.

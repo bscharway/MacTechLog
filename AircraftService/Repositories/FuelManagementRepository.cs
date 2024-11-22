@@ -15,11 +15,23 @@ namespace AircraftService.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<FuelManagementData>> GetAllFuelManagementDataAsync()
+        {
+            return await _context.FuelManagementData.ToListAsync();
+        }
+
         public async Task<FuelManagementData> GetFuelManagementDataByIdAsync(int id)
         {
             return await _context.FuelManagementData
                 .AsNoTracking() // Improve performance by not tracking the retrieved entity
                 .FirstOrDefaultAsync(f => f.Id == id);
+        }
+
+        public async Task<FuelManagementData> GetFuelManagementDataByAircraftIdAsync(string aircraftId)
+        {
+            return await _context.FuelManagementData
+                .AsNoTracking()
+                .FirstOrDefaultAsync(f => f.AircraftRegistration == aircraftId);
         }
 
         public async Task AddFuelManagementDataAsync(FuelManagementData fuelManagementData)

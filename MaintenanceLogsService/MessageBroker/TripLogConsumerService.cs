@@ -32,7 +32,7 @@ namespace MaintenanceLogsService.MessageBroker
             string routingKey = "";
 
             _channel.ExchangeDeclare(exchangeName, type: ExchangeType.Fanout);
-            _channel.QueueDeclare(queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            _channel.QueueDeclare(queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
             _channel.QueueBind(queueName, exchangeName, routingKey, arguments: null);
             _channel.BasicQos(0, 1, false);
         }

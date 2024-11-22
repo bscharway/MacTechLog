@@ -10,12 +10,12 @@ namespace AircraftService.MappingProfiles
         public AircraftMappingProfile()
         {
             // Mapping from Aircraft entity to AircraftDto
-            CreateMap<Aircraft, AircraftDto>()
-                .ForMember(dest => dest.FuelManagement, opt => opt.MapFrom(src => src.FuelManagementData));
+            CreateMap<Aircraft, AircraftDto>();
+            //.ForMember(dest => dest.FuelManagement, opt => opt.MapFrom(src => src.FuelManagementData));
 
             // Mapping from CreateAircraftDto to Aircraft entity
-            CreateMap<CreateAircraftDto, Aircraft>()
-                .ForMember(dest => dest.FuelManagementData, opt => opt.MapFrom(src => src.FuelManagementDataDto));
+            CreateMap<CreateAircraftDto, Aircraft>();
+                //.ForMember(dest => dest.FuelManagementData, opt => opt.MapFrom(src => src.FuelManagementDataDto));
 
             // Mapping from UpdateAircraftDto to Aircraft entity
             CreateMap<UpdateAircraftDto, Aircraft>();
@@ -24,8 +24,9 @@ namespace AircraftService.MappingProfiles
             CreateMap<FuelManagementData, FuelManagementDataDto>();
 
             // Mapping from FuelManagementDataDto to FuelManagementData
-            CreateMap<FuelManagementDataDto, FuelManagementData>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Ignore Id to avoid conflicts when creating a new FuelManagementData
+            CreateMap<FuelManagementDataDto, FuelManagementData>();
+
+                //.ForMember(dest => dest.AircraftId, opt => opt.MapFrom(src => src.)); // Ignore Id to avoid conflicts when creating a new FuelManagementData
         }
     }
 }

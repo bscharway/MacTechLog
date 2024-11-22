@@ -24,12 +24,12 @@ namespace PilotEntryService.MappingProfiles
             CreateMap<CreateDe_Anti_IcingDataDto, De_Anti_IcingData>();
 
             // Mapping configurations for FuelData and its DTOs
-            CreateMap<FuelData, FuelDataDto>();
-            CreateMap<CreateFuelDataDto, FuelData>();
+            //CreateMap<FuelData, FuelDataDto>();
+            //CreateMap<CreateFuelDataDto, FuelData>();
 
-            // Mapping configurations for Inspection and its DTOs
-            CreateMap<Inspection, InspectionDto>();
-            CreateMap<CreateInspectionDto, Inspection>();
+            //// Mapping configurations for Inspection and its DTOs
+            //CreateMap<Inspection, InspectionDto>();
+            //CreateMap<CreateInspectionDto, Inspection>();
         }
     }
 }

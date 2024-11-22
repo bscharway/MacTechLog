@@ -29,12 +29,12 @@ namespace AircraftService.Services
             return _mapper.Map<IEnumerable<AircraftDto>>(aircrafts);
         }
 
-        public async Task<AircraftDto> GetAircraftByIdAsync(int id)
+        public async Task<AircraftDto> GetAircraftByIdAsync(string aircraftRegistration)
         {
-            var aircraft = await _aircraftRepository.GetAircraftByIdAsync(id);
+            var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftRegistration);
             if (aircraft == null)
             {
-                throw new KeyNotFoundException($"Aircraft with ID {id} not found.");
+                throw new KeyNotFoundException($"Aircraft with ID {aircraftRegistration} not found.");
             }
             return _mapper.Map<AircraftDto>(aircraft);
         }
@@ -46,10 +46,10 @@ namespace AircraftService.Services
                 var aircraft = _mapper.Map<Aircraft>(createAircraftDto);
 
                 // Handle FuelManagementData initialization
-                aircraft.FuelManagementData = _mapper.Map<FuelManagementData>(createAircraftDto.FuelManagementDataDto);
+                //aircraft.FuelManagementData = _mapper.Map<FuelManagementData>(createAircraftDto.FuelManagementDataDto);
 
                 await _aircraftRepository.AddAircraftAsync(aircraft);
-                await _fuelManagementRepository.AddFuelManagementDataAsync(aircraft.FuelManagementData);
+                //await _fuelManagementRepository.AddFuelManagementDataAsync(aircraft.FuelManagementData);
 
                 scope.Complete();
 
@@ -57,29 +57,29 @@ namespace AircraftService.Services
             }
         }
 
-        public async Task UpdateAircraftAsync(int id, UpdateAircraftDto updateAircraftDto)
+        public async Task UpdateAircraftAsync(string aircraftRegistration, UpdateAircraftDto updateAircraftDto)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var aircraft = await _aircraftRepository.GetAircraftByIdAsync(id);
+                var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftRegistration);
                 if (aircraft == null)
                 {
-                    throw new KeyNotFoundException($"Aircraft with ID {id} not found.");
+                    throw new KeyNotFoundException($"Aircraft with ID {aircraftRegistration} not found.");
                 }
 
                 // Update the aircraft details
                 _mapper.Map(updateAircraftDto, aircraft);
 
-                // Update the FuelManagementData if provided
-                if (updateAircraftDto.FuelManagementDataDto != null)
-                {
-                    if (aircraft.FuelManagementData == null)
-                    {
-                        aircraft.FuelManagementData = new FuelManagementData();
-                    }
-                    _mapper.Map(updateAircraftDto.FuelManagementDataDto, aircraft.FuelManagementData);
-                    await _fuelManagementRepository.UpdateFuelManagementDataAsync(aircraft.FuelManagementData);
-                }
+                //// Update the FuelManagementData if provided
+                //if (updateAircraftDto.FuelManagementDataDto != null)
+                //{
+                //    if (aircraft.FuelManagementData == null)
+                //    {
+                //        aircraft.FuelManagementData = new FuelManagementData();
+                //    }
+                //    _mapper.Map(updateAircraftDto.FuelManagementDataDto, aircraft.FuelManagementData);
+                //    await _fuelManagementRepository.UpdateFuelManagementDataAsync(aircraft.FuelManagementData);
+                //}
 
                 await _aircraftRepository.UpdateAircraftAsync(aircraft);
 
@@ -87,49 +87,88 @@ namespace AircraftService.Services
             }
         }
 
-        public async Task DeleteAircraftAsync(int id)
+        public async Task DeleteAircraftAsync(string id)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
+                // Delete related fuel management data
+                var fuelManagementData = await _fuelManagementRepository.GetFuelManagementDataByAircraftIdAsync(id);
+                if (fuelManagementData != null)
+                {
+                    await _fuelManagementRepository.DeleteFuelManagementDataAsync(fuelManagementData.Id);
+                }
+
                 await _aircraftRepository.DeleteAircraftAsync(id);
                 scope.Complete();
             }
         }
+        //public async Task DeleteAircraftAsync(int id)
+        //{
+        //    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        //    {
+        //        await _aircraftRepository.DeleteAircraftAsync(id);
+        //        scope.Complete();
+        //    }
+        //}
 
-        public async Task UpdateFuelManagementAsync(int id, UpdateFuelManagementDto fuelManagementDto)
+        public async Task UpdateFuelManagementAsync(string aircraftRegistration, UpdateFuelManagementDto fuelManagementDto)
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var aircraft = await _aircraftRepository.GetAircraftByIdAsync(id);
-                if (aircraft == null)
+                var fuelManagementData = await _fuelManagementRepository.GetFuelManagementDataByAircraftIdAsync(aircraftRegistration);
+                if (fuelManagementData == null)
                 {
-                    throw new KeyNotFoundException($"Aircraft with ID {id} not found.");
+                    throw new KeyNotFoundException($"Fuel management data for Aircraft ID {aircraftRegistration} not found.");
                 }
 
-                if (aircraft.FuelManagementData != null)
-                {
-                    aircraft.FuelManagementData.FuelOnBoard = fuelManagementDto.FuelOnBoard;
-                    aircraft.FuelManagementData.FuelCapacity = fuelManagementDto.FuelCapacity;
-                }
-                else
-                {
-                    // Create FuelManagementData if it doesn't exist
-                    aircraft.FuelManagementData = new FuelManagementData
-                    {
-                        FuelOnBoard = fuelManagementDto.FuelOnBoard,
-                        FuelCapacity = fuelManagementDto.FuelCapacity
-                    };
-                    await _fuelManagementRepository.AddFuelManagementDataAsync(aircraft.FuelManagementData);
-                }
-
-                await _aircraftRepository.UpdateAircraftAsync(aircraft);
+                // Update fuel management details
+                _mapper.Map(fuelManagementDto, fuelManagementData);
+                await _fuelManagementRepository.UpdateFuelManagementDataAsync(fuelManagementData);
 
                 scope.Complete();
             }
         }
 
+        //public async Task UpdateFuelManagementAsync(int id, UpdateFuelManagementDto fuelManagementDto)
+        //{
+        //    using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        //    {
+        //        var aircraft = await _aircraftRepository.GetAircraftByIdAsync(id);
+        //        if (aircraft == null)
+        //        {
+        //            throw new KeyNotFoundException($"Aircraft with ID {id} not found.");
+        //        }
+
+        //        if (aircraft.FuelManagementData != null)
+        //        {
+        //            aircraft.FuelManagementData.RevisedParkingFuel = fuelManagementDto.RevisedParkingFuel;
+        //            aircraft.FuelManagementData.PlannedUplift = fuelManagementDto.PlannedUplift;
+        //            aircraft.FuelManagementData.ActualUplift = fuelManagementDto?.ActualUplift;
+        //            aircraft.FuelManagementData.LandingFuel = fuelManagementDto.LandingFuel;
+        //        }
+        //        else
+        //        {
+        //            // Create FuelManagementData if it doesn't exist
+        //            aircraft.FuelManagementData = new FuelManagementData
+        //            {
+        //                RevisedParkingFuel = fuelManagementDto.RevisedParkingFuel,
+        //                PlannedUplift = fuelManagementDto.PlannedUplift,
+        //                ActualUplift = fuelManagementDto?.ActualUplift,
+        //                LandingFuel = fuelManagementDto.LandingFuel
+        //            };
+        //            await _fuelManagementRepository.AddFuelManagementDataAsync(aircraft.FuelManagementData);
+        //        }
+
+        //        await _aircraftRepository.UpdateAircraftAsync(aircraft);
+
+        //        scope.Complete();
+        //    }
+        //}
+
+
+
         // Aircraft Service Implementation for Flight Hours and Cycles Tracking
-        public async Task UpdateFlightHoursAndCyclesAsync(int aircraftId, int additionalHours, int additionalCycles)
+        public async Task UpdateFlightHoursAndCyclesAsync(string aircraftId, int additionalHours, int additionalCycles)
         {
             var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftId);
             if (aircraft == null)
@@ -143,7 +182,7 @@ namespace AircraftService.Services
             await _aircraftRepository.UpdateAircraftAsync(aircraft);
         }
 
-        public async Task UpdateFlightHoursCyclesAndFuelAsync(int aircraftId, int flightHours, int cycles, int fuelConsumed)
+        public async Task UpdateFlightHoursCyclesAndFuelAsync(string aircraftId, int flightHours, int cycles, double fuelConsumed)
         {
             var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftId);
             if (aircraft == null)
@@ -156,15 +195,69 @@ namespace AircraftService.Services
             aircraft.Cycles += cycles;
 
             // Update fuel management data
-            if (aircraft.FuelManagementData != null)
+            var fuelManagementData = await _fuelManagementRepository.GetFuelManagementDataByAircraftIdAsync(aircraftId);
+            if (fuelManagementData != null)
             {
-                aircraft.FuelManagementData.FuelOnBoard -= fuelConsumed;
-                if (aircraft.FuelManagementData.FuelOnBoard < 0)
+                fuelManagementData.LatestRecordedFuelOnBoard -= fuelConsumed;
+                if (fuelManagementData.LatestRecordedFuelOnBoard < 0)
                 {
-                    aircraft.FuelManagementData.FuelOnBoard = 0; // Ensure fuel on board is not negative
+                    fuelManagementData.LatestRecordedFuelOnBoard = 0; // Ensure fuel on board is not negative
                 }
+                await _fuelManagementRepository.UpdateFuelManagementDataAsync(fuelManagementData);
             }
 
+            await _aircraftRepository.UpdateAircraftAsync(aircraft);
+        }
+
+        //public async Task UpdateFlightHoursCyclesAndFuelAsync(int aircraftId, int flightHours, int cycles, int fuelConsumed)
+        //{
+        //    var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftId);
+        //    if (aircraft == null)
+        //    {
+        //        throw new KeyNotFoundException($"Aircraft with ID {aircraftId} not found.");
+        //    }
+
+        //    // Update flight hours and cycles
+        //    aircraft.TotalFlightHours += flightHours;
+        //    aircraft.Cycles += cycles;
+
+        //    // Update fuel management data
+        //    if (aircraft.FuelManagementData != null)
+        //    {
+        //        aircraft.FuelManagementData.LatestRecordedFuelOnBoard -= fuelConsumed;
+        //        if (aircraft.FuelManagementData.LatestRecordedFuelOnBoard < 0)
+        //        {
+        //            aircraft.FuelManagementData.LatestRecordedFuelOnBoard = 0; // Ensure fuel on board is not negative
+        //        }
+        //    }
+
+        //    await _aircraftRepository.UpdateAircraftAsync(aircraft);
+        //    await _fuelManagementRepository.AddFuelManagementDataAsync(aircraft.FuelManagementData);
+        //}
+
+        public async Task UpdateFlightHoursCyclesAndFuelAsyncFromMessageBroker(string aircraftId, int flightHours, int cycles, double landingFuel, int tripLogId = 0, int maintenanceLogId = 0)
+        {
+            var aircraft = await _aircraftRepository.GetAircraftByIdAsync(aircraftId);
+            if (aircraft == null)
+            {
+                throw new KeyNotFoundException($"Aircraft with ID {aircraftId} not found.");
+            }
+
+            // Update flight hours and cycles
+            aircraft.TotalFlightHours += flightHours;
+            aircraft.Cycles += cycles;
+
+            // Create a new FuelManagementData entry
+            var fuelManagementData = new FuelManagementData
+            {
+                AircraftRegistration = aircraftId,
+                LandingFuel = landingFuel,
+                TripLogId = tripLogId,
+                MaintenanceLogId = maintenanceLogId,
+                LatestRecordedFuelOnBoard = landingFuel
+            };
+
+            await _fuelManagementRepository.AddFuelManagementDataAsync(fuelManagementData);
             await _aircraftRepository.UpdateAircraftAsync(aircraft);
         }
 

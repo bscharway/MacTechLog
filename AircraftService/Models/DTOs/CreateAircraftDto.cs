@@ -30,13 +30,6 @@ namespace AircraftService.Models.DTOs
 
         public int Cycles { get; set; }
 
-        public FuelManagementDataDto FuelManagementDataDto { get; set; } = new FuelManagementDataDto() 
-        { 
-            FuelCapacity = 100000, 
-            FuelOnBoard = 30000, 
-            LastRefueled = DateTime.Now, 
-            PlannedUplift = 0, 
-            RecentUplift = 0 
-        };
+        public FuelManagementDataDto FuelManagementDataDto { get; set; }
     }
 }

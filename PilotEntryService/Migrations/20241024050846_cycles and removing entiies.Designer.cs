@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PilotEntryService.Data;
 
@@ -11,9 +12,11 @@ using PilotEntryService.Data;
 namespace PilotEntryService.Migrations
 {
     [DbContext(typeof(PilotEntryContext))]
-    partial class PilotEntryContextModelSnapshot : ModelSnapshot
+    [Migration("20241024050846_cycles and removing entiies")]
+    partial class cyclesandremovingentiies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -29,8 +29,8 @@ namespace PilotEntryService.Repositories
         {
             return await _context.TripLogs
                 .Include(t => t.DeAntiIcingData)
-                .Include(t => t.FuelData)
-                .Include(t => t.Inspection)
+                //.Include(t => t.FuelData)
+                //.Include(t => t.Inspection)
                 .ToListAsync();
         }
 
@@ -43,8 +43,8 @@ namespace PilotEntryService.Repositories
         {
             return await _context.TripLogs
                 .Include(t => t.DeAntiIcingData)
-                .Include(t => t.FuelData)
-                .Include(t => t.Inspection)
+                //.Include(t => t.FuelData)
+                //.Include(t => t.Inspection)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
